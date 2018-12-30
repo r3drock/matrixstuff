@@ -1,5 +1,5 @@
 #include <iostream>
-#include "matrix.h"
+#include "test.h"
 void printVec(size_t rows, size_t columns, std::vector<double> &values) {
 	std::cout << "[";
 	for(size_t y = 0; y < rows; ++y){
@@ -20,6 +20,113 @@ void printVec(size_t rows, size_t columns, std::vector<double> &values) {
 	}
 	std::cout << "]"  << std::endl;
 }
+void testgetrawvec(){
+	auto rows = 2;
+	auto columns = 3;
+	std::vector<double> A = std::vector<double>(rows*columns);
+	A[0] = 1;
+	A[1] = 2;
+	A[2] = 3;
+	A[3] = 4;
+	A[4] = 5;
+	A[5] = 6;
+
+	Matrixv2 B = Matrixv2(rows, columns, &A);
+	B.print();
+	for (double &val : B.get_raw_vector()){
+		val = 0;
+	}
+	B.print();
+}
+void testmultwithpointer(){
+	auto rows = 1000;
+	auto columns = 100;
+	std::vector<double> A = std::vector<double>(rows*columns);
+
+	for (size_t i = 0; i < A.size(); ++i){
+		A[i] = static_cast<double>(i);
+	}
+
+	Matrixv2 B = Matrixv2(rows, columns, &A);
+
+
+	Matrixv2 C = Matrixv2(columns, rows, &A);
+
+
+	std::vector<double> E = std::vector<double>(
+			B.get_mult_result_matrix_size(C));
+
+	
+	std::cout << "inplace with pointer:\nMatrix multiplication started!\n";
+    auto start = std::chrono::high_resolution_clock::now();
+
+    // operation to be timed ...
+	B.mult(C,&E);
+
+    auto finish = std::chrono::high_resolution_clock::now();
+    std::cout << "Matrix multiplication took " << std::chrono::duration_cast<std::chrono::microseconds>(finish-start).count() << "us\nresult:\n";
+	
+
+
+
+}
+void test6(){
+	auto rows = 1000;
+
+	auto columns = 100;
+	std::vector<double> A = std::vector<double>(rows*columns);
+
+	for (size_t i = 0; i < A.size(); ++i){
+		A[i] = static_cast<double>(i);
+	}
+
+	Matrix B = Matrix(rows, columns, A);
+
+
+	Matrix C = Matrix(columns, rows, A);
+
+	
+	std::cout << "Normal:\nMatrix multiplication started!\n";
+    auto start = std::chrono::high_resolution_clock::now();
+
+    // operation to be timed ...
+	Matrix D = B.mult(C);
+
+    auto finish = std::chrono::high_resolution_clock::now();
+    std::cout << "Matrix multiplication took " << std::chrono::duration_cast<std::chrono::microseconds>(finish-start).count() << "us\nresult:\n";
+	
+
+}
+
+void test5(){
+	std::cout << "pointer test:\n";
+	size_t rows = 100;
+	size_t columns = 100;
+
+	std::vector<double> E = std::vector<double>(rows*columns);
+	std::vector<double> F = std::vector<double>(rows*columns);
+
+	for (size_t i = 0; i < E.size(); ++i){
+		E[i] = static_cast<double>(i);
+	}
+
+	for (size_t i = 0; i < F.size(); ++i){
+		F[i] = static_cast<double>(i);
+	}
+
+	Matrixv2 G = Matrixv2(rows, columns, &E);
+	Matrixv2 H = Matrixv2(rows, columns, &F);
+
+	std::cout << "Matrix multiplication started!\n";
+    auto start = std::chrono::high_resolution_clock::now();
+
+    // operation to be timed ...
+	Matrix I = G.mult(H);
+
+    auto finish = std::chrono::high_resolution_clock::now();
+    std::cout << "Matrix multiplication took " << std::chrono::duration_cast<std::chrono::microseconds>(finish-start).count() << "us\nresult:\n";
+}
+
 void test3(){
 	
 	auto rows = 2;
@@ -48,9 +155,16 @@ void test3(){
 	std::cout << "C:\n";
 	C.print();
 	
+	std::cout << "B * C:\n";
+	std::cout << "Matrix multiplication started!\n";
+    auto start = std::chrono::high_resolution_clock::now();
+
+    // operation to be timed ...
 	Matrix D = B.mult(C);
 
-	std::cout << "B * C:\n";
+    auto finish = std::chrono::high_resolution_clock::now();
+    std::cout << "Matrix multiplication took " << std::chrono::duration_cast<std::chrono::microseconds>(finish-start).count() << "us\nresult:\n";
+	
 	D.print();
 }
 void test4(){
@@ -78,14 +192,23 @@ void test4(){
 
 	Matrix H = Matrix(3, 2, F);
 
-	std::cout << "G:\n";
+
+	std::cout << "normaltest:\nG:\n";
 	G.print();
 	std::cout << "H:\n";
 	H.print();
 	
-	Matrix I = G.mult(H);
 
 	std::cout << "G * H:\n";
+	std::cout << "Matrix multiplication started!\n";
+    auto start = std::chrono::high_resolution_clock::now();
+
+    // operation to be timed ...
+	Matrix I = G.mult(H);
+
+    auto finish = std::chrono::high_resolution_clock::now();
+    std::cout << "Matrix multiplication took " << std::chrono::duration_cast<std::chrono::microseconds>(finish-start).count() << "us\nresult:\n";
+	
 	I.print();
 }
 

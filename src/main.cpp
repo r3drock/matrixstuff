@@ -1,6 +1,7 @@
 #include "test.h"
 int main(){
-	test3();
-	test4();
+	test6();
+	testmultwithpointer();
+	getc(stdin);
 }
 
