@@ -1,5 +1,61 @@
 #include "matrixv2.h"
 	
+double Matrixv2::mean(){
+	double sum = 0.0;
+	for (double val : (*values)){
+		sum += val;
+	}
+	double mean = sum / static_cast<double>(values->size());
+	return mean;  
+}
+double Matrixv2::variance(){
+	double variance = 0.0;
+	double mean = this->mean();
+	for (double val : (*values)){
+		variance += pow(val - mean,2.0);
+	}	
+	return variance * (1.0 / (static_cast<double>(rows*columns) - 1.0));  
+}
+double Matrixv2::std_dev(){
+	return sqrt(this->variance());
+}
+double Matrixv2::covariance(Matrixv2 &b){
+	if (columns != 1 || b.get_columns() != 1){
+		std::cerr << "shape passt nicht! Es muss genau eine column sein." 
+			<< "\nDiese Matrix columns: " << columns 
+			<< "\nMatrix b columns: " << b.get_columns() << std::endl;
+		exit(1);
+	}
+	if (rows != b.get_rows()){
+		std::cerr << "Matrix is not the same size as the matrix which is given"
+		   	<< "as parameter."
+			<< "\nDiese Matrix:\n" 
+			<< "rows: " << rows << "columns: " << columns
+			<< "\nMatrix b:\n" 
+			<< "rows: " << b.get_rows() << "columns: " << b.get_columns() 
+			<< std::endl;
+		exit(1);
+	}
+	double mean = this->mean();
+	double b_mean = b.mean();
+
+	std::vector<double> &b_values = b.get_raw_vector();
+
+	double covariance = 0.0;
+	for( size_t i = 0 ; i < rows ; ++i){
+		covariance += ((*values)[i] - mean) * (b_values[i] - b_mean);
+	}	
+	return covariance * (1.0 / (static_cast<double>(rows) - 1.0));  
+}
+
+double Matrixv2::pearson(Matrixv2 &b){
+
+	double sxy = this->covariance(b);
+	double sxx = this->variance();
+	double syy = b.variance();
+
+	return sxy / sqrt(sxx * syy);
+}
 void Matrixv2::print() const{
 	std::cout << "[";
 	for(size_t y = 0; y < rows; ++y){

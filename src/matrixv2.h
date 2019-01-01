@@ -1,6 +1,7 @@
 #ifndef MATRIXV2_H
 #define MATRIXV2_H
 #include <vector>
+#include <cmath>
 #include <iostream>
 #include "matrix.h"
 class Matrixv2{
@@ -17,6 +18,13 @@ public:
 	Matrix mult(Matrix b) const;
 	Matrix mult(Matrixv2 b) const;
 	Matrixv2 mult(Matrixv2 b, std::vector<double> *resultmatrixpointer) const;
+
+	double mean();
+	double variance();
+	double std_dev();
+	double covariance(Matrixv2 &b);
+	double pearson(Matrixv2 &b);
+
 	size_t get_mult_result_matrix_size(Matrixv2 &b);
 	size_t get_mult_result_matrix_size(Matrix &b);
 private:
