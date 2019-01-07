@@ -143,12 +143,11 @@ int main(){
 		print_data(test[j]);
 	}
 
-	//for ( size_t j = measurements.size() -1 ; j >=0; --j){
-		//delete measurement_matrices[j];
-	//}
-
-
-
+	for (std::vector<Matrixv2*>::iterator it = measurement_matrices.begin();
+			it != measurement_matrices.end(); ++it){
+		delete (*it);
+	}
+	//measurement_matrices.clear();
 }
 void process_iris_dataset(){
 	std::string dateiname = "datasets/iris.csv";
