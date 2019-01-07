@@ -11,6 +11,7 @@ public:
 	size_t get_columns() const;
 	std::vector<double>& get_raw_vector();
 	Matrixv2(size_t rows, size_t columns,std::vector<double> *valuespointer);
+	~Matrixv2();
 	Matrix add(Matrixv2 b) const;
 	Matrix add(Matrix b) const;
 	void addinplace(Matrix b) const;

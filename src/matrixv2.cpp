@@ -1,5 +1,5 @@
 #include "matrixv2.h"
-	
+
 double Matrixv2::mean(){
 	double sum = 0.0;
 	for (double val : (*values)){
@@ -97,6 +97,9 @@ Matrixv2::Matrixv2(size_t rows, size_t columns,std::vector<double> *values_p)
 	}
 	values = values_p;
 }	
+Matrixv2::~Matrixv2(){
+	values->~vector<double>();
+}
 
 Matrix Matrixv2::add(Matrix b) const{
 	if(b.get_rows()!= rows || b.get_columns() != columns){

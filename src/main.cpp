@@ -3,9 +3,38 @@
 #include <cmath>
 #include <fstream>
 #include <algorithm>
+#include <random> 
 #include "matrixv2.h"
 #include "test.h"
 size_t get_file_length(std::ifstream &quelle);
+void print_vec(size_t rows, size_t columns, std::vector<double> &values) {
+	std::cout << "[";
+	for(size_t y = 0; y < rows; ++y){
+		if(y>0) 
+			std::cout << " ";
+		std::cout << "[";
+
+		for(size_t x = 0; x < columns; ++x){
+			if(x<columns-1)
+				std::cout << values[x + (y * columns)] << ",";
+			else
+				std::cout << values[x + (y * columns)];
+		}
+		if(y<rows-1)
+			std::cout << "]" << std::endl;
+		else
+			std::cout << "]";
+	}
+	std::cout << "]"  << std::endl;
+}
+struct data{
+	Matrixv2* value;
+	char label;
+};
+void print_data(data data){
+	std::cout << data.label;
+	data.value->print();
+}
 void print_vec(size_t rows, size_t columns, std::vector<std::string> &values) {
 	std::cout << "[";
 	for(size_t y = 0; y < rows; ++y){
@@ -27,6 +56,101 @@ void print_vec(size_t rows, size_t columns, std::vector<std::string> &values) {
 	std::cout << "]"  << std::endl;
 }
 int main(){
+	
+	std::string dateiname = "datasets/sonar.all-data";
+    	
+	std::ifstream quelle(dateiname);
+
+	size_t filelength = get_file_length(quelle);
+
+	std::vector<std::vector<double>> measurements = 
+		std::vector<std::vector<double>>(filelength);
+	std::vector<char> labels = std::vector<char>(0);
+
+	
+	const size_t rows = 1;
+	const size_t columns = 60;
+
+	size_t i = 0;
+	while(quelle.good()){
+		std::string zeile;
+		getline(quelle,zeile);
+		std::string delimiter = ",";
+		std::string token;
+		size_t pos = 0;
+		unsigned int t = 0;
+		std::vector<double> &temp = measurements[i];
+		++i;
+		while ((pos = zeile.find(delimiter)) != std::string::npos) {
+			token = zeile.substr(0, pos);
+			if (t==60){
+				labels.push_back(token.at(0));
+			} else if (t>60){
+				std::cout << "invalid data" <<std::endl;
+				exit(1);
+			} else {
+				temp.push_back(std::stod(token));
+			}
+			zeile.erase(0, pos + delimiter.length());
+			++t;
+		}
+	}
+	std::vector<Matrixv2*> measurement_matrices = std::vector<Matrixv2*>(0);
+	
+
+	for ( size_t j = 0 ; j < measurements.size() ; ++j){
+		Matrixv2 *a = new Matrixv2(rows,columns,&measurements[j]);
+		measurement_matrices.push_back(a);
+	}
+/*	
+	{
+		size_t j = 0;
+		std::cout << "alal" << std::endl;
+		for (Matrixv2 *measurement : (measurement_matrices)){
+			std::cout << j << ":\n";
+			measurement->print();
+			++j;
+		}
+	}
+*/	
+
+	std::vector<data> training = std::vector<data>(0);
+	std::vector<data> test = std::vector<data>(0);
+
+	std::mt19937 generator;
+	std::uniform_real_distribution<double> verteilung = 
+		std::uniform_real_distribution<double>(0.0, 1.0);
+
+	for ( size_t j = 0 ; j < measurement_matrices.size() ; ++j){
+		if(verteilung(generator)<=0.8){
+			training.push_back(data{measurement_matrices[j],labels[j]});
+		} else {
+			test.push_back(data{measurement_matrices[j],labels[j]});
+		}
+	}
+	std::cout << "\ntrainingsdatenmengengroesse: " << training.size()
+		<<"\ntestdatenmengengroesse: "  << test.size() << "\nsumme: "
+		<< training.size() + test.size() 
+		<< "\ngesamtdatenmengengroesse: " << measurement_matrices.size() 
+		<< std::endl;;
+	
+	std::cout << "Trainingsdaten: " << std::endl;
+	for(size_t j = 0; j < training.size(); ++j){
+		print_data(training[j]);
+	}
+	std::cout << "Testdaten: " << std::endl;
+	for(size_t j = 0; j < test.size(); ++j){
+		print_data(test[j]);
+	}
+
+	//for ( size_t j = measurements.size() -1 ; j >=0; --j){
+		//delete measurement_matrices[j];
+	//}
+
+
+
+}
+void process_iris_dataset(){
 	std::string dateiname = "datasets/iris.csv";
 
 	std::ifstream quelle(dateiname);
@@ -131,7 +255,6 @@ int main(){
 	}
 	std::cout << "]]\n";
 }
-
 
 size_t get_file_length(std::ifstream &quelle){
 	size_t filelength = std::count(std::istreambuf_iterator<char>(quelle), 
