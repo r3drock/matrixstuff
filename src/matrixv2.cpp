@@ -8,6 +8,10 @@ double Matrixv2::mean(){
 	double mean = sum / static_cast<double>(values->size());
 	return mean;  
 }
+Matrixv2::~Matrixv2(){
+
+}
+
 double Matrixv2::variance(){
 	double variance = 0.0;
 	double mean = this->mean();
@@ -97,9 +101,6 @@ Matrixv2::Matrixv2(size_t rows, size_t columns,std::vector<double> *values_p)
 	}
 	values = values_p;
 }	
-Matrixv2::~Matrixv2(){
-	values->~vector<double>();
-}
 
 Matrix Matrixv2::add(Matrix b) const{
 	if(b.get_rows()!= rows || b.get_columns() != columns){
