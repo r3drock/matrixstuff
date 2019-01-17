@@ -7,7 +7,7 @@
 #include "matrixv2.h"
 #include "test.h"
 size_t get_file_length(std::ifstream &quelle);
-void print_vec(size_t rows, size_t columns, std::vector<double> &values) {
+void print_vec(size_t rows, size_t columns, std::vector<double> &values) { 
 	std::cout << "[";
 	for(size_t y = 0; y < rows; ++y){
 		if(y>0) 
@@ -54,6 +54,10 @@ void print_vec(size_t rows, size_t columns, std::vector<std::string> &values) {
 			std::cout << "]";
 	}
 	std::cout << "]"  << std::endl;
+}
+template <typename T>
+void delete_pointed_to(T* const ptr){
+	delete ptr;
 }
 int main(){
 	
@@ -142,11 +146,14 @@ int main(){
 	for(size_t j = 0; j < test.size(); ++j){
 		print_data(test[j]);
 	}
+	
+	std::for_each(measurement_matrices.begin(),measurement_matrices.end(),
+			delete_pointed_to<Matrixv2>);
 
-	for (std::vector<Matrixv2*>::iterator it = measurement_matrices.begin();
-			it != measurement_matrices.end(); ++it){
-		delete (*it);
-	}
+	//for (std::vector<Matrixv2*>::iterator it = measurement_matrices.begin();
+			//it != measurement_matrices.end(); ++it){
+		//delete (*it);
+	//}
 	//measurement_matrices.clear();
 }
 void process_iris_dataset(){
