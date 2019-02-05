@@ -163,7 +163,9 @@ void test3(){
 	Matrix D = B.mult(C);
 
     auto finish = std::chrono::high_resolution_clock::now();
-    std::cout << "Matrix multiplication took " << std::chrono::duration_cast<std::chrono::microseconds>(finish-start).count() << "us\nresult:\n";
+    std::cout << "Matrix multiplication took " 
+		<< std::chrono::duration_cast<std::chrono::microseconds>(finish-start).count() 
+		<< "us\nresult:\n";
 	
 	D.print();
 }

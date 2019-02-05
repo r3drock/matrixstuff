@@ -90,7 +90,7 @@ std::vector<double>& Matrixv2::get_raw_vector(){
 }
 
 
-Matrixv2::Matrixv2(size_t rows, size_t columns,std::vector<double> *values_p)
+Matrixv2::Matrixv2(size_t rows, size_t columns,std::unique_ptr<std::vector<double>>& values_p)
 : rows {rows}, columns {columns}{
 	size_t elements = rows * columns;
 	if ( elements != (*values_p).size()){

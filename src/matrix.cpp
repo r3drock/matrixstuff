@@ -46,6 +46,7 @@ Matrix::Matrix(size_t rows, size_t columns, std::vector<double> &initvalues)
 	}
 	values = initvalues; 
 }	
+hallo
 
 //inefficient because matrix gets copied
 Matrix::Matrix(size_t rows, size_t columns,std::vector<double> *valuespointer)
@@ -59,7 +60,6 @@ Matrix::Matrix(size_t rows, size_t columns,std::vector<double> *valuespointer)
 	}
 	values = (*valuespointer);
 }	
-
 
 Matrix Matrix::add(Matrix b) const{
 	if(b.get_rows()!= rows || b.get_columns() != columns){
@@ -104,6 +104,5 @@ Matrix Matrix::mult(Matrix b) const{
 			resultvector[x + (y * new_columns)] = smallresult;
 		}
 	}
-
 	return Matrix(new_rows, new_columns, resultvector);
 }

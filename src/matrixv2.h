@@ -2,6 +2,7 @@
 #define MATRIXV2_H
 #include <vector>
 #include <cmath>
+#include <memory>
 #include <iostream>
 #include "matrix.h"
 class Matrixv2{
@@ -10,7 +11,7 @@ public:
 	size_t get_rows() const;
 	size_t get_columns() const;
 	std::vector<double>& get_raw_vector();
-	Matrixv2(size_t rows, size_t columns,std::vector<double> *valuespointer);
+	Matrixv2(size_t rows, size_t columns,std::unique_ptr<std::vector<double>>& valuespointer);
 	~Matrixv2();
 	Matrix add(Matrixv2 b) const;
 	Matrix add(Matrix b) const;
@@ -18,7 +19,7 @@ public:
 	void addinplace(Matrixv2 b) const;
 	Matrix mult(Matrix b) const;
 	Matrix mult(Matrixv2 b) const;
-	Matrixv2 mult(Matrixv2 b, std::vector<double> *resultmatrixpointer) const;
+	Matrixv2 mult(Matrixv2 b, std::unique_ptr<<std::vector<double>>& resultmatrixpointer) const;
 
 	double mean();
 	double variance();
@@ -31,6 +32,6 @@ public:
 private:
 	const size_t rows;
 	const size_t columns;
-	std::vector<double> *values;
+	std::unique_ptr<std::vector<double>>& values;
 };
 #endif
